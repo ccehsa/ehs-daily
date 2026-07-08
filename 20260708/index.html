@@ -620,6 +620,17 @@
     color: rgba(255,255,255,0.6);
     line-height: 1.6;
   }
+
+/* ====== 页面内部滚动容器 ====== */
+.page-inner {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.page-inner::-webkit-scrollbar {
+  display: none;
+}
 </style>
 </head>
 <body>
@@ -634,35 +645,38 @@
 
 <!-- ====== PAGE 1: 封面 ====== -->
 <div class="page page-1">
-  <div class="date-bar">2026.07.08 · 星期三</div>
-  <div class="main-title">
-    内蒙古硝酸铵车<span class="hl-orange">爆炸</span><br>
+  <div class="page-inner">
+    <div class="date-bar">2026.07.08 · 星期三</div>
+    <div class="main-title">
+      内蒙古硝酸铵车<span class="hl-orange">爆炸</span><br>
 湖南桥梁强降雨垮塌<br>
 特种作业新规全面落地
 
-  </div>
-  <div class="subtitle">
-    危化品运输再酿惨剧，国道碰撞引爆硝酸铵致2死4伤；强降雨致湖南桥梁瞬间垮塌两人失联；应急管理部第19号令取消3年复审改6年换证
-  </div>
-  <div class="tag-row">
+    </div>
+    <div class="subtitle">
+      危化品运输再酿惨剧，国道碰撞引爆硝酸铵致2死4伤；强降雨致湖南桥梁瞬间垮塌两人失联；应急管理部第19号令取消3年复审改6年换证
+    </div>
+    <div class="tag-row">
   <div class="tag tag-t1">危化品运输</div>
   <div class="tag tag-t2">桥梁垮塌</div>
   <div class="tag tag-t3">特种作业</div>
   <div class="tag tag-t4">工伤预防</div>
 </div>
-  <div class="bottom-area">
-    <div class="bottom-slogan">华中EHS联盟 <span>越专业·越有趣</span></div>
+    <div class="bottom-area">
+      <div class="bottom-slogan">华中EHS联盟 <span>越专业·越有趣</span></div>
+    </div>
   </div>
   <div class="swipe-hint">↑ 滑动翻页</div>
 </div>
 
 <!-- ====== PAGE 2: 事故点评 ====== -->
 <div class="page page-2">
-  <div class="section-label">事故 · 点评</div>
-  <div class="section-title">一周刚开场，警钟就没停过</div>
-  <div class="tap-hint">— 点击卡片查看详情 —</div>
+  <div class="page-inner">
+    <div class="section-label">事故 · 点评</div>
+    <div class="section-title">一周刚开场，警钟就没停过</div>
+    <div class="tap-hint">— 点击卡片查看详情 —</div>
 
-  <div class="news-card" onclick="showDetail('detail1')">
+      <div class="news-card" onclick="showDetail('detail1')">
     <div class="card-top">
       <span class="severity-tag">爆炸</span>
       <span class="tap-icon">点击查看详情 ›</span>
@@ -689,22 +703,24 @@
     <div class="news-meta">7月5日 · 苏丹北方州 · 15死1伤</div>
   </div>
 
-    <div class="action-banner" onclick="showDetail('detail4')" style="cursor:pointer;">
+      <div class="action-banner" onclick="showDetail('detail4')" style="cursor:pointer;">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <span>特种作业新规来了！取消3年复审，改6年换证；取消地域限制，全国自由申请</span>
       <span style="font-size:10px;opacity:0.6;">详情 ›</span>
     </div>
+  </div>
   </div>
   <div class="swipe-hint dark">↑ 滑动翻页</div>
 </div>
 
 <!-- ====== PAGE 3: 法规速递 ====== -->
 <div class="page page-3">
-  <div class="section-label">法规 · 速递</div>
-  <div class="section-title">新规速递，合规先行</div>
-  <div class="tap-hint" style="color: rgba(0,0,0,0.35);">— 点击条目查看详情 —</div>
+  <div class="page-inner">
+    <div class="section-label">法规 · 速递</div>
+    <div class="section-title">新规速递，合规先行</div>
+    <div class="tap-hint" style="color: rgba(0,0,0,0.35);">— 点击条目查看详情 —</div>
 
-  <div class="reg-card" onclick="showDetail('reg1')">
+      <div class="reg-card" onclick="showDetail('reg1')">
     <div class="reg-num">1</div>
     <div class="reg-body">
       <div class="reg-head">
@@ -763,17 +779,18 @@
       <div class="effective">2026.7.1 已生效</div>
     </div>
   </div>
-
+  </div>
   <div class="swipe-hint dark">↑ 滑动翻页</div>
 </div>
 
 <!-- ====== PAGE 4: 知识充电 ====== -->
 <div class="page page-4">
-  <div class="section-label">知识 · 充电站</div>
-  <div class="section-title">知识充电站</div>
-  <div class="section-subtitle">危化品运输应急处置 + 特种作业证管理新规</div>
+  <div class="page-inner">
+    <div class="section-label">知识 · 充电站</div>
+    <div class="section-title">知识充电站</div>
+    <div class="section-subtitle">危化品运输应急处置 + 特种作业证管理新规</div>
 
-  <div class="knowledge-block">
+      <div class="knowledge-block">
     <h3>危化品运输事故应急处置指南</h3>
     <p>如果在公路上遇到危化品运输车辆发生事故，<strong>第一时间远离现场，向上风向撤离</strong>，不要围观拍照。很多爆炸事故的次生伤害，就是围观者太近造成的。<br><br><strong>危化品泄漏处置原则：</strong><br>1. <strong>立即报警</strong>：拨打119、120，说明泄漏物质名称、数量、泄漏情况<br>2. <strong>迅速撤离</strong>：向上风向或侧风向撤离至安全区域，至少远离300米<br>3. <strong>严禁明火</strong>：禁止吸烟、使用手机、启动车辆等可能产生火花的行为<br>4. <strong>等待救援</strong>：专业人员到达前，不要擅自处置<br><br><strong>硝酸铵等特殊：</strong>遇火、遇热、受撞击极易爆炸，必须保持更大安全距离。</p>
     <div class="formula">硝酸铵（NH₄NO₃）：遇火、遇热、受撞击极易爆炸<br>2020年贝鲁特港口爆炸、2015年天津港事故均与硝酸铵管理失控有关</div>
@@ -785,10 +802,11 @@
     <div class="formula">特种作业操作证有效期：6年<br>换证周期：每6年1次（原为每3年复审）<br>全国通用，电子证书与实体证书同等效力</div>
   </div>
 
-  <div class="footer-contact" onclick="showDetail('profile')">
-    <div class="contact-name">潘先森</div>
-    <div class="contact-text">有事找我 · 没事常联系</div>
-    <div class="contact-hint">— 点击查看详情 —</div>
+    <div class="footer-contact" onclick="showDetail('profile')">
+      <div class="contact-name">潘先森</div>
+      <div class="contact-text">有事找我 · 没事常联系</div>
+      <div class="contact-hint">— 点击查看详情 —</div>
+    </div>
   </div>
 </div>
 
