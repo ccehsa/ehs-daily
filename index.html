@@ -2,1148 +2,132 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>华中EHS联盟 · 每日EHS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华中EHS联盟 - 每日资讯</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  html {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: 100%;
-  }
-
-  body {
-    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-    background: #0a0a0a;
-    color: #1a1a1a;
-    -webkit-font-smoothing: antialiased;
-    height: 100%;
-  }
-
-  .page {
-    width: 100%;
-    min-height: 100vh;
-    height: 100vh;
-    padding: 40px 28px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-  }
-
-  /* ====== 翻页指示器 ====== */
-  .page-indicator {
-    position: fixed;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 999;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .page-indicator .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.3);
-    transition: all 0.3s;
-    cursor: pointer;
-  }
-  .page-indicator .dot.active {
-    background: #c6ff00;
-    height: 24px;
-    border-radius: 4px;
-  }
-
-  /* ====== 翻页提示 ====== */
-  .swipe-hint {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 2px;
-    animation: bounce 2s infinite;
-  }
-  .swipe-hint.dark { color: rgba(0,0,0,0.25); }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(-6px); }
-  }
-
-  /* ====== 点击提示 ====== */
-  .tap-hint {
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    text-align: center;
-    margin-bottom: 14px;
-    letter-spacing: 1px;
-  }
-
-  /* ====== PAGE 1: 封面 ====== */
-  .page-1 {
-    background: #0a0a0a;
-    justify-content: center;
-    align-items: flex-start;
-  }
-  .page-1 .date-bar {
-    font-size: 13px;
-    color: #c6ff00;
-    letter-spacing: 3px;
-    margin-bottom: 20px;
-    font-weight: 700;
-  }
-  .page-1 .main-title {
-    font-size: 36px;
-    font-weight: 900;
-    line-height: 1.3;
-    color: #fff;
-    margin-bottom: 24px;
-  }
-  .page-1 .main-title .hl-yellow { color: #c6ff00; }
-  .page-1 .main-title .hl-orange { color: #ff6b35; }
-  .page-1 .subtitle {
-    font-size: 16px;
-    line-height: 1.8;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 32px;
-    padding-left: 14px;
-    position: relative;
-  }
-  .page-1 .subtitle::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 3px;
-    height: 100%;
-    background: #c6ff00;
-    border-radius: 2px;
-  }
-  .page-1 .tag-row {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .page-1 .tag {
-    font-size: 12px;
-    padding: 6px 14px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    border-radius: 4px;
-  }
-  .page-1 .tag-t1 { background: #ff6b35; color: #0a0a0a; }
-  .page-1 .tag-t2 { background: #c6ff00; color: #0a0a0a; }
-  .page-1 .tag-t3 { background: #00d4ff; color: #0a0a0a; }
-  .page-1 .tag-t4 { background: #7b2cbf; color: #fff; }
-  .page-1 .bottom-area {
-    margin-top: auto;
-    padding-bottom: 50px;
-  }
-  .page-1 .bottom-slogan {
-    font-size: 14px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 1px;
-  }
-  .page-1 .bottom-slogan span { color: #c6ff00; }
-
-  /* ====== PAGE 2: 事故点评 ====== */
-  .page-2 {
-    background: #ff6b35;
-    color: #0a0a0a;
-  }
-  .page-2 .section-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: rgba(0,0,0,0.45);
-    margin-bottom: 12px;
-    font-weight: 900;
-  }
-  .page-2 .section-title {
-    font-size: 26px;
-    font-weight: 900;
-    line-height: 1.4;
-    margin-bottom: 8px;
-    color: #0a0a0a;
-  }
-
-  .news-card {
-    background: rgba(0,0,0,0.15);
-    padding: 16px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    position: relative;
-  }
-  .news-card:active {
-    transform: scale(0.98);
-    background: rgba(0,0,0,0.25);
-  }
-  .news-card .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-  }
-  .news-card .severity-tag {
-    font-size: 10px;
-    font-weight: 900;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: #0a0a0a;
-    color: #ff6b35;
-    letter-spacing: 1px;
-  }
-  .news-card .punish-tag {
-    display: inline-block;
-    font-size: 9px;
-    font-weight: 900;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: #e63946;
-    color: #fff;
-    letter-spacing: 0.5px;
-    margin-left: 6px;
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
-  .news-card .tap-icon {
-    font-size: 10px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 1px;
-  }
-  .news-card .news-headline {
-    font-size: 15px;
-    font-weight: 900;
-    color: #fff;
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-  .news-card .news-meta {
-    font-size: 11px;
-    color: rgba(255,255,255,0.55);
-    font-weight: 700;
-  }
-
-  .page-2 .action-banner {
-    margin-top: 12px;
-    background: #0a0a0a;
-    padding: 14px 16px;
-    font-size: 13px;
-    color: #c6ff00;
-    font-weight: 700;
-    line-height: 1.6;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .page-2 .action-banner:active {
-    transform: scale(0.98);
-    background: #1a1a1a;
-  }
-
-  /* ====== PAGE 3: 法规速递 ====== */
-  .page-3 {
-    background: #00d4ff;
-    color: #0a0a0a;
-  }
-  .page-3 .section-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: rgba(0,0,0,0.4);
-    margin-bottom: 12px;
-    font-weight: 900;
-  }
-  .page-3 .section-title {
-    font-size: 26px;
-    font-weight: 900;
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
-
-  .reg-card {
-    background: rgba(0,0,0,0.08);
-    padding: 14px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .reg-card:active {
-    transform: scale(0.98);
-    background: rgba(0,0,0,0.16);
-  }
-  .reg-card .reg-num {
-    background: #0a0a0a;
-    color: #c6ff00;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 14px;
-    flex-shrink: 0;
-    border-radius: 6px;
-  }
-  .reg-card .reg-body { flex: 1; }
-  .reg-card .reg-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  .reg-card h3 {
-    font-size: 14px;
-    font-weight: 900;
-    line-height: 1.4;
-  }
-  .reg-card .tap-icon {
-    font-size: 10px;
-    color: rgba(0,0,0,0.35);
-    letter-spacing: 1px;
-    flex-shrink: 0;
-  }
-  .reg-card .reg-brief {
-    font-size: 12px;
-    line-height: 1.6;
-    color: rgba(0,0,0,0.6);
-  }
-  .reg-card .effective {
-    display: inline-block;
-    background: #0a0a0a;
-    color: #c6ff00;
-    font-size: 10px;
-    padding: 2px 8px;
-    margin-top: 4px;
-    font-weight: 700;
-    border-radius: 3px;
-  }
-
-  /* ====== PAGE 4: 知识充电 + 个人宣传 ====== */
-  .page-4 {
-    background: #7b2cbf;
-    color: #fff;
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
-  .page-4 .section-label {
-    font-size: 11px;
-    letter-spacing: 4px;
-    color: #c6ff00;
-    margin-bottom: 12px;
-    font-weight: 900;
-  }
-  .page-4 .section-title {
-    font-size: 24px;
-    font-weight: 900;
-    margin-bottom: 8px;
-    color: #fff;
-    line-height: 1.4;
-  }
-  .page-4 .section-subtitle {
-    font-size: 14px;
-    color: #c6ff00;
-    margin-bottom: 18px;
-    line-height: 1.6;
-  }
-  .knowledge-block {
-    background: rgba(255,255,255,0.08);
-    padding: 16px 14px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-  }
-  .knowledge-block h3 {
-    font-size: 16px;
-    font-weight: 900;
-    color: #c6ff00;
-    margin-bottom: 8px;
-  }
-  .knowledge-block p {
-    font-size: 13px;
-    line-height: 1.8;
-    color: rgba(255,255,255,0.85);
-  }
-  .knowledge-block p strong {
-    color: #c6ff00;
-    font-weight: 900;
-  }
-  .knowledge-block .formula {
-    background: rgba(198,255,0,0.12);
-    padding: 10px 14px;
-    margin: 10px 0 0;
-    font-size: 12px;
-    line-height: 1.7;
-    border-radius: 4px;
-    color: rgba(255,255,255,0.85);
-  }
-
-  /* 页脚个人宣传区 - 潘先森名字在上 */
-  .footer-contact {
-    margin-top: auto;
-    padding-bottom: 50px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .footer-contact:active {
-    transform: scale(0.97);
-  }
-  .footer-contact .contact-name {
-    font-size: 28px;
-    font-weight: 900;
-    color: #c6ff00;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-  }
-  .footer-contact .contact-text {
-    font-size: 16px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.7);
-    letter-spacing: 1px;
-  }
-  .footer-contact .contact-hint {
-    font-size: 11px;
-    color: rgba(255,255,255,0.35);
-    margin-top: 8px;
-    letter-spacing: 1px;
-  }
-
-  /* ====== 详情弹窗 ====== */
-  .detail-overlay {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.92);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 28px;
-    animation: fadeIn 0.25s;
-  }
-  .detail-overlay.show { display: flex; }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  .detail-content {
-    background: #1a1a1a;
-    width: 100%;
-    max-width: 420px;
-    max-height: 85vh;
-    overflow-y: auto;
-    border-radius: 12px;
-    padding: 28px 24px;
-    position: relative;
-    animation: slideUp 0.3s;
-  }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  .detail-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 32px;
-    height: 32px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .detail-close:active { background: rgba(255,255,255,0.2); }
-  .detail-severity {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 900;
-    padding: 3px 10px;
-    border-radius: 3px;
-    margin-bottom: 14px;
-    letter-spacing: 1px;
-  }
-  .severity-red { background: #e63946; color: #fff; }
-  .severity-orange { background: #ff6b35; color: #0a0a0a; }
-  .severity-yellow { background: #ffd166; color: #0a0a0a; }
-  .severity-blue { background: #00d4ff; color: #0a0a0a; }
-  .detail-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: #fff;
-    line-height: 1.4;
-    margin-bottom: 10px;
-  }
-  .detail-meta {
-    font-size: 12px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 20px;
-    line-height: 1.6;
-  }
-  .detail-section {
-    margin-bottom: 18px;
-  }
-  .detail-section-title {
-    font-size: 13px;
-    font-weight: 900;
-    color: #c6ff00;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  .detail-section p {
-    font-size: 14px;
-    line-height: 1.9;
-    color: rgba(255,255,255,0.78);
-  }
-  .detail-section p strong {
-    color: #ff6b35;
-    font-weight: 700;
-  }
-  .detail-section .highlight-box {
-    background: rgba(198,255,0,0.08);
-    padding: 12px 14px;
-    border-radius: 6px;
-    margin-top: 10px;
-    font-size: 13px;
-    line-height: 1.8;
-    color: rgba(255,255,255,0.7);
-  }
-  .detail-section .highlight-box strong {
-    color: #c6ff00;
-  }
-  /* 惩处高亮框 */
-  .detail-section .punish-box {
-    background: rgba(230,57,70,0.12);
-    padding: 14px 16px;
-    border-radius: 6px;
-    margin-top: 12px;
-    font-size: 13px;
-    line-height: 1.9;
-    color: rgba(255,255,255,0.85);
-  }
-  .detail-section .punish-box strong {
-    color: #e63946;
-    font-weight: 900;
-  }
-  .detail-section .punish-box .punish-label {
-    display: inline-block;
-    background: #e63946;
-    color: #fff;
-    font-size: 10px;
-    font-weight: 900;
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-bottom: 8px;
-    letter-spacing: 1px;
-  }
-  .detail-source {
-    font-size: 11px;
-    color: rgba(255,255,255,0.3);
-    margin-top: 16px;
-    padding-top: 14px;
-    position: relative;
-  }
-  .detail-source::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 40px;
-    height: 1px;
-    background: rgba(255,255,255,0.15);
-  }
-
-  /* 右滑返回提示 */
-  .swipe-back-hint {
-    position: absolute;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: rgba(255,255,255,0.25);
-    letter-spacing: 1px;
-    white-space: nowrap;
-  }
-
-  /* 潘先森详情页样式 */
-  .profile-header {
-    text-align: center;
-    margin-bottom: 24px;
-  }
-  .profile-header .profile-name {
-    font-size: 28px;
-    font-weight: 900;
-    color: #c6ff00;
-    letter-spacing: 3px;
-    margin-bottom: 6px;
-  }
-  .profile-header .profile-title {
-    font-size: 14px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 1px;
-  }
-  .profile-qr-section {
-    text-align: center;
-    margin-top: 20px;
-    padding: 20px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-  }
-  .profile-qr-section img {
-    width: 180px;
-    height: 180px;
-    border-radius: 8px;
-    display: block;
-    margin: 0 auto 12px;
-    background: #fff;
-    object-fit: contain;
-  }
-  .profile-qr-section .qr-label {
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.6;
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.logo {
+  font-size: 28px;
+  font-weight: 900;
+  color: #c6ff00;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.slogan {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+}
+.latest {
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  border-left: 4px solid #c6ff00;
+}
+.latest-tag {
+  display: inline-block;
+  background: #c6ff00;
+  color: #0a0a0a;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.latest-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.latest-meta {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 16px;
+}
+.latest-link {
+  display: inline-block;
+  background: #c6ff00;
+  color: #0a0a0a;
+  text-decoration: none;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+.archive-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: rgba(255,255,255,0.7);
+}
+.archive-list {
+  list-style: none;
+}
+.archive-item {
+  background: #1a1a1a;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.archive-item a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+.archive-date {
+  color: rgba(255,255,255,0.4);
+  font-size: 13px;
+}
+.footer {
+  text-align: center;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+}
 </style>
 </head>
 <body>
-
-<!-- 翻页指示器 -->
-<div class="page-indicator" id="indicator">
-  <div class="dot active" data-page="0"></div>
-  <div class="dot" data-page="1"></div>
-  <div class="dot" data-page="2"></div>
-  <div class="dot" data-page="3"></div>
+<div class="header">
+  <div class="logo">华中EHS联盟</div>
+  <div class="slogan">越专业 · 越有趣</div>
 </div>
 
-<!-- ====== PAGE 1: 封面 ====== -->
-<div class="page page-1">
-  <div class="date-bar">2026.07.07 · 星期二</div>
-  <div class="main-title">
-    郑州小区火灾<span class="hl-orange">5死1伤</span><br>湖北强对流<span class="hl-yellow">8死1失联</span><br>安全人的七月，不好过
-  </div>
-  <div class="subtitle">
-    郑州和昌珑悦小区高层火灾致5死1伤，湖北黄石黄冈强对流天气致8死1失联，台风"美莎克"致广西水库坝体决口——本期聚焦高层消防、极端天气应急与7月新规速递。
-  </div>
-  <div class="tag-row">
-    <div class="tag tag-t1">高层消防</div>
-    <div class="tag tag-t2">极端天气</div>
-    <div class="tag tag-t3">防汛安全</div>
-    <div class="tag tag-t4">7月新规</div>
-  </div>
-  <div class="bottom-area">
-    <div class="bottom-slogan">华中EHS联盟 <span>越专业·越有趣</span></div>
-  </div>
-  <div class="swipe-hint">↑ 滑动翻页</div>
+<div class="latest">
+  <div class="latest-tag">最新一期</div>
+  <div class="latest-title">每日EHS资讯 · 2026年7月8日</div>
+  <div class="latest-meta">2026年7月8日 · 星期三</div>
+  <a class="latest-link" href="./20260708/">阅读全文 →</a>
 </div>
 
-<!-- ====== PAGE 2: 事故点评 ====== -->
-<div class="page page-2">
-  <div class="section-label">事故 · 点评</div>
-  <div class="section-title">一周刚开场，警钟就没停过</div>
-  <div class="tap-hint">— 点击卡片查看详情 —</div>
+<div class="archive-title">历史期刊</div>
+<ul class="archive-list">
+  <li class="archive-item">
+    <a href="./20260708/">2026-07-08 · 每日EHS资讯</a>
+    <span class="archive-date">第1期</span>
+  </li>
+</ul>
 
-  <div class="news-card" onclick="showDetail('detail1')">
-    <div class="card-top">
-      <span class="severity-tag">重大事故</span>
-      <span class="punish-tag">涉及惩处</span>
-      <span class="tap-icon">点击查看详情 ›</span>
-    </div>
-    <div class="news-headline">郑州和昌珑悦小区高层火灾致5死1伤</div>
-    <div class="news-meta">2026.07.06 · 河南郑州惠济区 · 5死1伤</div>
-  </div>
-
-  <div class="news-card" onclick="showDetail('detail2')">
-    <div class="card-top">
-      <span class="severity-tag">重大事故</span>
-      <span class="tap-icon">点击查看详情 ›</span>
-    </div>
-    <div class="news-headline">威海经开区厂房火灾造成4人死亡</div>
-    <div class="news-meta">2026.07.06 · 山东威海经开区 · 4死</div>
-  </div>
-
-  <div class="news-card" onclick="showDetail('detail3')">
-    <div class="card-top">
-      <span class="severity-tag">重大事故</span>
-      <span class="tap-icon">点击查看详情 ›</span>
-    </div>
-    <div class="news-headline">湖北黄石黄冈遭遇强对流天气致8死1失联</div>
-    <div class="news-meta">2026.07.06 · 湖北黄石、黄冈等地 · 8死1失联</div>
-  </div>
-
-  <div class="action-banner" onclick="showDetail('detail4')" style="cursor:pointer;">
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <span>台风"美莎克"正面袭击广西，六蓝水库坝体决口，南宁防汛响应升至一级，59条河流81站超警，3000余人投入抢险救援</span>
-      <span style="font-size:10px;opacity:0.6;">详情 ›</span>
-    </div>
-  </div>
-  <div class="swipe-hint dark">↑ 滑动翻页</div>
+<div class="footer">
+  华中EHS联盟 · 每日EHS资讯<br>
+  有事找我 · 没事常联系
 </div>
-
-<!-- ====== PAGE 3: 法规速递 ====== -->
-<div class="page page-3">
-  <div class="section-label">法规 · 速递</div>
-  <div class="section-title">7月新规集中落地 安全人请查收</div>
-  <div class="tap-hint" style="color: rgba(0,0,0,0.35);">— 点击条目查看详情 —</div>
-
-  <div class="reg-card" onclick="showDetail('reg1')">
-    <div class="reg-num">1</div>
-    <div class="reg-body">
-      <div class="reg-head">
-        <h3>《煤矿重大事故隐患判定标准》修订版</h3>
-        <span class="tap-icon">详情 ›</span>
-      </div>
-      <div class="reg-brief">应急管理部令第21号，明确17类煤矿重大事故隐患情形，7月1日起施行</div>
-      <div class="effective">2026.7.1 已生效</div>
-    </div>
-  </div>
-
-  <div class="reg-card" onclick="showDetail('reg2')">
-    <div class="reg-num">2</div>
-    <div class="reg-body">
-      <div class="reg-head">
-        <h3>《电力重大事故隐患判定标准》（发改委41号令）</h3>
-        <span class="tap-icon">详情 ›</span>
-      </div>
-      <div class="reg-brief">储能涉网性能不达标直接定性为重大隐患，7月1日施行</div>
-      <div class="effective">2026.7.1 已生效</div>
-    </div>
-  </div>
-
-  <div class="reg-card" onclick="showDetail('reg3')">
-    <div class="reg-num">3</div>
-    <div class="reg-body">
-      <div class="reg-head">
-        <h3>电动汽车电池安全+整车安全双强标同步落地</h3>
-        <span class="tap-icon">详情 ›</span>
-      </div>
-      <div class="reg-brief">电池热失控后不起火不爆炸，强制物理一键断电装置</div>
-      <div class="effective">2026.7.1 已生效</div>
-    </div>
-  </div>
-
-  <div class="reg-card" onclick="showDetail('reg4')">
-    <div class="reg-num">4</div>
-    <div class="reg-body">
-      <div class="reg-head">
-        <h3>4项强制性国标7月1日施行</h3>
-        <span class="tap-icon">详情 ›</span>
-      </div>
-      <div class="reg-brief">GB 6441事故分类编码、GB 6442事故调查技术规范等</div>
-      <div class="effective">2026.7.1 已生效</div>
-    </div>
-  </div>
-
-  <div class="reg-card" onclick="showDetail('reg5')">
-    <div class="reg-num">5</div>
-    <div class="reg-body">
-      <div class="reg-head">
-        <h3>《危险化学品企业防雷安全重大隐患判定》</h3>
-        <span class="tap-icon">详情 ›</span>
-      </div>
-      <div class="reg-brief">GB/T 47320-2026，适用于危化品企业试生产和正式运行期</div>
-      <div class="effective">2026.7 已生效</div>
-    </div>
-  </div>
-
-  <div class="swipe-hint dark">↑ 滑动翻页</div>
-</div>
-
-<!-- ====== PAGE 4: 知识充电 ====== -->
-<div class="page page-4">
-  <div class="section-label">知识 · 充电站</div>
-  <div class="section-title">知识充电 · 安全人必学</div>
-  <div class="section-subtitle">高层消防与极端天气应急</div>
-
-  <div class="knowledge-block" onclick="showDetail('kb1')" style="cursor:pointer;">
-    <h3>高层住宅火灾，该跑还是该等？</h3>
-    <p><strong>场景一：自家起火</strong>——初期火势小烟气少时迅速向外逃生，通过楼梯撤离，随手关门防烟扩散；火势失控时退守有门窗的房间，关门堵缝，拨打119报告位置。<br><br><strong>场景二：楼道有烟</strong>——先触摸门锁温度，温度高说明门外火势大，不要开门；用湿毛巾堵门缝，在窗口用手电/挥舞衣物发出求救信号。<br><br><strong>场景三：楼下起火</strong>——绝大多数住宅火灾亡人发生在此场景。楼道已充满浓烟时<strong>绝对不能冲进楼梯间</strong>，应退回家中关门待援。楼道无烟则可迅速向下疏散。</p>
-    <div class="formula">关键数据：管道井/电缆井一旦起火，10分钟可蔓延6层楼 | 建筑高度大于100米必须设置消防避难层 | 灭火器口诀"提拔握压"，消火栓"一掰二开三拉"</div>
-  </div>
-
-  <div class="knowledge-block" onclick="showDetail('kb2')" style="cursor:pointer;">
-    <h3>龙卷风+山洪+内涝，极端天气怎么办？</h3>
-    <p><strong>强对流预警识别</strong>：蓝色→黄色→橙色→红色，逐级升级，红色预警时停止一切户外活动。<br><br><strong>龙卷风应对</strong>：立即进入地下室或底层内部无窗房间，远离窗户和外墙；户外无法躲避时趴卧在低洼处，用手护住头部。<br><br><strong>山洪应对</strong>：向两侧高处撤离，不要顺着洪水方向跑；不要在桥上停留，不要尝试涉水驾车。<br><br><strong>城市内涝应对</strong>：远离电力设备和变压器，不要涉水行走（水下可能有打开的井盖），如被困车内应果断破窗逃生。</p>
-    <div class="formula">本次台风"美莎克"启示：广西防城港24小时降雨量553.8毫米破历史纪录，59条河流81站超警，说明极端天气下的城市韧性建设至关重要</div>
-  </div>
-
-  <div class="footer-contact" onclick="showDetail('profile')">
-    <div class="contact-name">潘先森</div>
-    <div class="contact-text">有事找我 · 没事常联系</div>
-    <div class="contact-hint">— 点击查看详情 —</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：事故卡片1 ====== -->
-<div class="detail-overlay" id="detail1" onclick="hideDetail('detail1')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('detail1')">✕</div>
-    <div class="detail-severity severity-red">重大事故 · 高层火灾</div>
-    <div class="detail-title">郑州和昌珑悦小区<br>高层火灾致5死1伤</div>
-    <div class="detail-meta">2026.07.06 · 河南郑州惠济区<br>5死1伤</div>
-    <div class="detail-section">
-      <div class="detail-section-title">事故详情</div>
-      <p>7月6日7时51分，惠济区刘寨街道北三环和昌珑悦小区A座628房间发生火情，过火面积约15平方米。经全面搜救，5人遇难，1人受伤。该小区为半开放式商住公寓，底层商铺楼上公寓，每层29户，部分住房改民宿酒店。事发时楼道充满浓烟，居民紧急撤离。小区大门此前张贴有消防安全告知书，落款日期为6月25日。具体原因正在调查中。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">EHS启示</div>
-      <p>半开放式商住公寓人员密集、功能混合，<strong>消防管理难度大</strong>。每层29户的密度远超普通住宅，部分改民宿后消防责任更难落实。楼道浓烟是高层火灾最大杀手——<strong>浓烟中切勿冲入楼梯间</strong>，应退守关门待援。</p>
-    </div>
-    <div class="punish-box">
-      <span class="punish-label">⚠ 涉及惩处</span><br>
-      小区大门此前张贴消防安全告知书（落款6月25日），说明已知晓消防隐患。事故调查将重点追查<strong>消防设施是否完备、物业是否履行消防巡查职责、民宿改造是否通过消防审批</strong>。
-    </div>
-    <div class="detail-source">来源：新华社 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：事故卡片2 ====== -->
-<div class="detail-overlay" id="detail2" onclick="hideDetail('detail2')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('detail2')">✕</div>
-    <div class="detail-severity severity-red">重大事故 · 厂房火灾</div>
-    <div class="detail-title">威海经开区厂房火灾<br>造成4人死亡</div>
-    <div class="detail-meta">2026.07.06 · 山东威海经开区<br>4死</div>
-    <div class="detail-section">
-      <div class="detail-section-title">事故详情</div>
-      <p>6日15时50分，威海经济技术开发区泊于镇大邓格村一厂房发生火情。经全力救援处置，18时40分明火扑灭，火灾造成4人死亡。事故调查、善后处置等工作正在进行中。（来源：央视新闻）</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">EHS启示</div>
-      <p>厂房火灾从起火到明火扑灭近3小时，说明<strong>初期火灾未能有效控制</strong>。厂房内人员应熟悉应急疏散路线和灭火器材位置，确保<strong>第一时间报警和自救</strong>。夏季高温干燥，厂房防火尤为重要。</p>
-    </div>
-    <div class="detail-source">来源：央视新闻 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：事故卡片3 ====== -->
-<div class="detail-overlay" id="detail3" onclick="hideDetail('detail3')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('detail3')">✕</div>
-    <div class="detail-severity severity-red">重大事故 · 强对流天气</div>
-    <div class="detail-title">湖北黄石黄冈遭遇<br>强对流天气致8死1失联</div>
-    <div class="detail-meta">2026.07.06 · 湖北黄石、黄冈等地<br>8死1失联</div>
-    <div class="detail-section">
-      <div class="detail-section-title">事故详情</div>
-      <p>7月6日19时至23时，黄石、黄冈、鄂州、咸宁等地遭遇强对流天气，53个乡镇风力达8至13级，其中2个乡镇达到13级，部分乡镇出现龙卷风。截至6日23时，已造成8人死亡、1人失联。省市县救援人员3500余人在一线全力开展救灾救治工作。（来源：新华社）</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">EHS启示</div>
-      <p>13级风力相当于台风级别，内陆出现龙卷风属极端天气。<strong>强对流预警升级时必须停止一切户外作业</strong>，尤其是建筑工地、高空作业、临时搭建物等高风险场所。企业须建立<strong>极端天气应急响应机制</strong>，红色预警时强制停工撤人。</p>
-    </div>
-    <div class="highlight-box">
-      <strong>极端天气安全提示：</strong>蓝色→黄色→橙色→红色预警逐级升级，红色预警时停止一切户外活动，立即进入坚固建筑物内部避险。
-    </div>
-    <div class="detail-source">来源：新华社 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：行动Banner ====== -->
-<div class="detail-overlay" id="detail4" onclick="hideDetail('detail4')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('detail4')">✕</div>
-    <div class="detail-severity severity-orange">防汛应急 · 台风灾害</div>
-    <div class="detail-title">台风"美莎克"正面袭击广西<br>六蓝水库坝体决口</div>
-    <div class="detail-meta">2026.07 · 广西南宁、防城港等地<br>59条河流81站超警</div>
-    <div class="detail-section">
-      <div class="detail-section-title">灾情概况</div>
-      <p>台风"美莎克"正面袭击广西，防城港24小时降雨量达<strong>553.8毫米</strong>，打破历史纪录。六蓝水库坝体决口，南宁防汛响应升至一级。全区59条河流81站超警戒水位，3000余人投入抢险救援。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">EHS启示</div>
-      <p>水库坝体决口是最严重的防汛险情之一，说明极端降雨强度已<strong>超出工程设计标准</strong>。企业临近河道或低洼地带的设施须制定<strong>超标准洪水应急预案</strong>，确保人员撤离路线和物资转移方案可靠。</p>
-    </div>
-    <div class="highlight-box">
-      <strong>防汛要点：</strong>暴雨红色预警时，低洼地区人员应提前撤离；不要涉水行走或驾车通过积水路段；远离河道、水库下游和山体边缘。
-    </div>
-    <div class="detail-source">来源：新华社 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：法规1 ====== -->
-<div class="detail-overlay" id="reg1" onclick="hideDetail('reg1')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('reg1')">✕</div>
-    <div class="detail-severity severity-blue">法规 · 7月1日生效</div>
-    <div class="detail-title">《煤矿重大事故隐患<br>判定标准》修订版</div>
-    <div class="detail-meta">应急管理部令第21号<br>2026年7月1日起施行</div>
-    <div class="detail-section">
-      <div class="detail-section-title">核心内容</div>
-      <p>本次修订对煤矿重大事故隐患的判定标准进行了系统性更新，明确了<strong>17类重大隐患情形</strong>，涵盖通风系统、瓦斯治理、防灭火、粉尘防治、顶板管理、机电运输等核心领域。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">合规要点</div>
-      <p>企业主要负责人对隐患排查治理<strong>负总责</strong>，瞒报漏报最高可罚<strong>百万并停产整顿</strong>。煤矿企业须对照新标准逐项自查，确保通风、瓦斯、防灭火等系统达标。</p>
-    </div>
-    <div class="detail-source">来源：应急管理部 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：法规2 ====== -->
-<div class="detail-overlay" id="reg2" onclick="hideDetail('reg2')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('reg2')">✕</div>
-    <div class="detail-severity severity-blue">法规 · 7月1日生效</div>
-    <div class="detail-title">《电力重大事故隐患<br>判定标准》</div>
-    <div class="detail-meta">发改委41号令<br>2026年7月1日施行</div>
-    <div class="detail-section">
-      <div class="detail-section-title">核心内容</div>
-      <p>首次以法规形式明确：并入220千伏及以上电网的<strong>电化学储能电站</strong>，若低电压穿越缺失、AGC/AVC未投运等涉网性能不达标，直接定性为<strong>"重大事故隐患"</strong>。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">合规要点</div>
-      <p>发现隐患须在<strong>3个工作日内</strong>上报能源局及地方监管部门。储能电站运营方须立即排查涉网性能，确保低电压穿越、AGC/AVC等功能正常投运。</p>
-    </div>
-    <div class="detail-source">来源：国家发改委 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：法规3 ====== -->
-<div class="detail-overlay" id="reg3" onclick="hideDetail('reg3')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('reg3')">✕</div>
-    <div class="detail-severity severity-blue">法规 · 7月1日生效</div>
-    <div class="detail-title">电动汽车电池安全+<br>整车安全双强标同步落地</div>
-    <div class="detail-meta">两项国家级强制标准<br>2026年7月1日同步实施</div>
-    <div class="detail-section">
-      <div class="detail-section-title">核心内容</div>
-      <p>《电动汽车用动力蓄电池安全要求》与《电动汽车安全要求》两项国家级强制标准7月1日同步实施。核心变化：<strong>电池单体热失控后整套系统不起火不爆炸</strong>；新增底部撞击测试和快充循环安全测试；强制搭载<strong>独立物理一键断电硬件</strong>，1秒内切断整车高压回路。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">合规要点</div>
-      <p><strong>不达标车型将强制停产</strong>。汽车生产企业须立即核查产品合规性，确保电池热失控安全性能、物理断电装置满足新标要求。</p>
-    </div>
-    <div class="detail-source">来源：工信部 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：法规4 ====== -->
-<div class="detail-overlay" id="reg4" onclick="hideDetail('reg4')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('reg4')">✕</div>
-    <div class="detail-severity severity-blue">法规 · 7月1日生效</div>
-    <div class="detail-title">4项强制性国标<br>7月1日施行</div>
-    <div class="detail-meta">GB 6441/6442/6721/46995-2025<br>2026年7月1日起施行</div>
-    <div class="detail-section">
-      <div class="detail-section-title">核心内容</div>
-      <p>包括<strong>GB 6441-2025</strong>《生产安全事故分类与编码》、<strong>GB 6442-2025</strong>《生产安全事故调查技术规范》、<strong>GB 6721-2025</strong>《生产安全事故直接经济损失统计要求》、<strong>GB 46995-2025</strong>《含硫化氢天然气井安全防护规范》4项强制性国家标准，统一了事故分类、调查和经济损失统计的技术规范。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">合规要点</div>
-      <p>企业事故管理须按新标准执行分类编码和调查程序，<strong>经济损失统计</strong>采用统一口径，含硫化氢天然气井须按新规范落实安全防护措施。</p>
-    </div>
-    <div class="detail-source">来源：国家标准委 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：法规5 ====== -->
-<div class="detail-overlay" id="reg5" onclick="hideDetail('reg5')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('reg5')">✕</div>
-    <div class="detail-severity severity-blue">法规 · 7月生效</div>
-    <div class="detail-title">《危险化学品企业<br>防雷安全重大隐患判定》</div>
-    <div class="detail-meta">GB/T 47320-2026<br>2026年7月生效</div>
-    <div class="detail-section">
-      <div class="detail-section-title">核心内容</div>
-      <p>由全国气象防灾减灾标准化技术委员会归口，规定了危险化学品企业防雷安全重大隐患的<strong>判定基本要求和工作程序</strong>，适用于危化品企业试生产（使用）期和正式运行期的防雷安全重大隐患判定。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">合规要点</div>
-      <p>危化品企业须按照新标准开展<strong>防雷安全自查</strong>，特别关注储罐区、装卸区等雷击高风险区域，确保防雷装置检测合格、接地电阻达标。</p>
-    </div>
-    <div class="detail-source">来源：全国气象防灾减灾标委会 · 华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：知识卡片1 ====== -->
-<div class="detail-overlay" id="kb1" onclick="hideDetail('kb1')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('kb1')">✕</div>
-    <div class="detail-severity severity-yellow">知识充电 · 高层消防</div>
-    <div class="detail-title">高层住宅火灾<br>该跑还是该等？</div>
-    <div class="detail-meta">高层建筑火灾逃生指南<br>关键时刻能救命</div>
-    <div class="detail-section">
-      <div class="detail-section-title">场景一：自家起火</div>
-      <p>初期火势小烟气少时<strong>迅速向外逃生</strong>，通过楼梯撤离，随手关门防烟扩散；火势失控时退守有门窗的房间，关门堵缝，拨打119报告位置。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">场景二：楼道有烟</div>
-      <p>先<strong>触摸门锁温度</strong>，温度高说明门外火势大，不要开门；用湿毛巾堵门缝，在窗口用手电/挥舞衣物发出求救信号。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">场景三：楼下起火</div>
-      <p>绝大多数住宅火灾亡人发生在此场景。楼道已充满浓烟时<strong>绝对不能冲进楼梯间</strong>，应退回家中关门待援。楼道无烟则可迅速向下疏散。</p>
-    </div>
-    <div class="highlight-box">
-      <strong>关键数据：</strong>管道井/电缆井一旦起火，10分钟可蔓延6层楼 | 建筑高度大于100米必须设置消防避难层 | 灭火器口诀"提拔握压"，消火栓"一掰二开三拉"
-    </div>
-    <div class="detail-source">华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：知识卡片2 ====== -->
-<div class="detail-overlay" id="kb2" onclick="hideDetail('kb2')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('kb2')">✕</div>
-    <div class="detail-severity severity-yellow">知识充电 · 极端天气</div>
-    <div class="detail-title">龙卷风+山洪+内涝<br>极端天气怎么办？</div>
-    <div class="detail-meta">台风暴雨极端天气应急自救<br>分场景应对指南</div>
-    <div class="detail-section">
-      <div class="detail-section-title">强对流天气预警识别</div>
-      <p>蓝色预警→黄色预警→橙色预警→红色预警，逐级升级，<strong>红色预警时停止一切户外活动</strong>。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">龙卷风应对</div>
-      <p>立即进入地下室或底层内部<strong>无窗房间</strong>，远离窗户和外墙；户外无法躲避时趴卧在低洼处，用手护住头部。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">山洪应对</div>
-      <p>向<strong>两侧高处</strong>撤离，不要顺着洪水方向跑；不要在桥上停留，不要尝试涉水驾车。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">城市内涝应对</div>
-      <p>远离电力设备和变压器，<strong>不要涉水行走</strong>（水下可能有打开的井盖），如被困车内应果断破窗逃生。</p>
-    </div>
-    <div class="highlight-box">
-      <strong>本次台风"美莎克"启示：</strong>广西防城港24小时降雨量553.8毫米破历史纪录，59条河流81站超警，说明极端天气下的城市韧性建设至关重要。
-    </div>
-    <div class="detail-source">华中EHS联盟整理</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<!-- ====== 详情弹窗：潘先森 ====== -->
-<div class="detail-overlay" id="profile" onclick="hideDetail('profile')">
-  <div class="detail-content" onclick="event.stopPropagation()">
-    <div class="detail-close" onclick="hideDetail('profile')">✕</div>
-    <div class="profile-header">
-      <div class="profile-name">潘先森</div>
-      <div class="profile-title">华中EHS联盟 · 安全人的圈子</div>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">关于我们</div>
-      <p>华中EHS联盟，聚焦安全生产、环保、职业健康领域，为安全人提供每日资讯、法规速递、事故点评、知识充电一站式服务。</p>
-    </div>
-    <div class="detail-section">
-      <div class="detail-section-title">加入我们</div>
-      <p>扫码添加微信，加入华中EHS联盟社群，与数千名安全人一起交流学习、共享资源。</p>
-    </div>
-    <div class="profile-qr-section">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCADIASwDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAFBABAAAAAAAAAAAAAAAAAAAACf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AKgA/9k=" alt="微信二维码">
-      <div class="qr-label">扫码添加微信 · 一起聊安全</div>
-    </div>
-    <div class="detail-source">华中EHS联盟 · 越专业·越有趣</div>
-    <div class="swipe-back-hint">← 右滑返回</div>
-  </div>
-</div>
-
-<script>
-// 翻页指示器联动
-  const pages = document.querySelectorAll('.page');
-  const dots = document.querySelectorAll('.page-indicator .dot');
-  let savedScrollTop = 0;
-
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const idx = parseInt(dot.dataset.page);
-      pages[idx].scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = Array.from(pages).indexOf(entry.target);
-        dots.forEach(d => d.classList.remove('active'));
-        if (dots[idx]) dots[idx].classList.add('active');
-      }
-    });
-  }, { threshold: 0.5 });
-
-  pages.forEach(p => observer.observe(p));
-
-  // 详情弹窗：打开前记录位置，关闭后恢复
-  function showDetail(id) {
-    savedScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    document.getElementById(id).classList.add('show');
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = -savedScrollTop + 'px';
-    document.body.style.width = '100%';
-  }
-
-  function hideDetail(id) {
-    document.getElementById(id).classList.remove('show');
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    window.scrollTo(0, savedScrollTop);
-  }
-
-  // 右滑返回功能
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let touchEndX = 0;
-  let touchEndY = 0;
-
-  document.addEventListener('touchstart', function(e) {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-  }, false);
-
-  document.addEventListener('touchend', function(e) {
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-  }, false);
-
-  function handleSwipe() {
-    const deltaX = touchEndX - touchStartX;
-    const deltaY = touchEndY - touchStartY;
-    const minSwipeDistance = 80;
-
-    // 右滑超过80px且水平距离大于垂直距离的2倍
-    if (deltaX > minSwipeDistance && Math.abs(deltaY) < Math.abs(deltaX) / 2) {
-      // 找到当前显示的弹窗并关闭
-      const overlays = document.querySelectorAll('.detail-overlay.show');
-      overlays.forEach(overlay => {
-        hideDetail(overlay.id);
-      });
-    }
-  }
-</script>
-
 </body>
 </html>
